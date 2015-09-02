@@ -2,7 +2,7 @@
 #
 # Retrieves and tracks bitcoin prices from bitcoincharts.com API
 #
-# Depends on the following, be sure to check the limits of
+# Depends on the following table, be sure to check the limits of
 # serial data type and DECIMAL precision when adding many/esoteric
 # currencies.
 #
