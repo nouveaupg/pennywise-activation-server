@@ -16,7 +16,8 @@
 #   activation_signature INT unsigned,
 #   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 #   paid TIMESTAMP,
-#   refunded TIMESTAMP);
+#   refunded TIMESTAMP,
+#   UNIQUE(uuid));
 
 # MySQL credentials
 LEDGER_DB_HOST = "localhost"

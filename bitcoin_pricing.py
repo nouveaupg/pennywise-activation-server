@@ -31,6 +31,7 @@ import sys
 import logging
 import datetime
 import MySQLdb
+from decimal import *
 
 LOG_CHANNEL = "activation"
 LOG_FILE = "activation_errors.log"

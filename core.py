@@ -2,17 +2,18 @@
 #
 # central dispatch for activation service
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from decimal import *
 import logging
-
+# Initalize modules
 import bitcoin_pricing
 import bitcoin_ledger
 
-PRICE_IN_DOLLARS 20
+PRICE_IN_DOLLARS = 30
 
-RPC_HOST "aries"
-RPC_PORT 8332
-RPC_USER "bitcoinrpc"
-RPC_PASSWD "EsDt8nz5LhPdERzct5MwQJr7wT7iW2vPPjaNGvD3SFWm"
+RPC_HOST = "aries"
+RPC_PORT = 8332
+RPC_USER = "bitcoinrpc"
+RPC_PASSWD = "EsDt8nz5LhPdERzct5MwQJr7wT7iW2vPPjaNGvD3SFWm"
 
 LOG_CHANNEL = "activation"
 LOG_FILE = "activation_errors.log"
@@ -59,7 +60,7 @@ class Core:
         # newly posted transaction
         unpaid_accounts = self.ledger.retrieveUnpaid()
         bitcoin_price = self.pricing.get24hourAvgForCurrency("USD")
-        current_price = double(PRICE_IN_DOLLARS / bitcoin_price)
+        current_price = Decimal(PRICE_IN_DOLLARS) / Decimal(bitcoin_price)
 
         total_accounts = len(unpaid_accounts)
         paid_accounts = 0
@@ -67,22 +68,22 @@ class Core:
 
         for each in unpaid_accounts.keys():
             account_balance = 0
+            ledger_id = unpaid_accounts[each]
             # search through newly posted transactions for addresses from unpaid_accounts
             for transaction in amt_received_by_address:
-                if transaction.address == each:
-                    account_balance = transaction.amount
-                    self.rpc_conn.setBalance(unpaid_accounts[each],
-                                                account_balance,
-                                                transaction.confirmations)
+                if transaction['address'] == each:
+                    account_balance = transaction['amount']
+                    self.ledger.setBalance(ledger_id,
+                                            account_balance,
+                                            transaction['confirmations'])
                     break
 
             if account_balance >= current_price:
                 if self.ledger.markPaid(ledger_id,current_price):
+                    ledger_record = self.ledger.getLedgerRecord(ledger_id)
                     refund_due = account_balance - current_price
                     paid_accounts += 1
-                    if refund_due > 0 and
-                        refund_due < current_price * .20 and
-                        ledger_record['refundAddress'] != None:
+                    if refund_due > 0 and refund_due < (current_price * Decimal(.20)):
                         # validate refundAddress with bitcoin client
                         valid_addr = self.rpc_conn.validateaddress(ledger_record['refundAddress'])
                         if valid_addr['isvalid']:
@@ -90,12 +91,12 @@ class Core:
                             # automatically refund overages within 20% of the
                             # price
                             self.ledger.markRefunded(ledger_id,refund_due)
-        self.logger.info("Found " + paid_accounts + " newly paid out of " + total_accounts + " accounts.")
+        self.logger.info("Found " + str(paid_accounts) + " newly paid out of " + str(total_accounts) + " accounts.")
 
     def updateForUuid(self,uuid,emailAddr=None):
         ledger_record = self.ledger.getLedgerRecord(uuid=uuid)
         bitcoin_price = self.pricing.get24hourAvgForCurrency("USD")
-        current_price = double(PRICE_IN_DOLLARS / bitcoin_price)
+        current_price = Decimal(PRICE_IN_DOLLARS) / Decimal(bitcoin_price)
 
         if ledger_record:
             ledger_id = ledger_record['id']
@@ -109,17 +110,15 @@ class Core:
                 account_balance = 0
                 recent_transactions = self.rpc_conn.listreceivedbyaddress()
                 for each in recent_transactions:
-                    if each.account == ledger_record['bitcoinAddress']:
-                        account_balance = each.amount
-                        self.ledger.setBalance(ledger_id,account_balance,each.confirmations)
+                    if each['account'] == ledger_record['bitcoinAddress']:
+                        account_balance = each['amount']
+                        self.ledger.setBalance(ledger_id,account_balance,each['confirmations'])
                         break
 
                 if account_balance >= current_price:
                     if self.ledger.markPaid(ledger_id,current_price):
                         amount_to_refund = account_balance - current_price
-                        if amount_to_refund > 0 and
-                            amount_to_refund < PRICE_IN_DOLLARS * .20 and
-                            ledger_record['refundAddress'] != None:
+                        if amount_to_refund > 0 and refund_due < (current_price * .20):
                             # validate refundAddress with bitcoin client
                             try:
                                 valid_addr = self.rpc_conn.validateaddress(ledger_record['refundAddress'])
@@ -141,7 +140,7 @@ class Core:
             # establish a new bitcoin account or return address from existing
             bitcoin_addr = self.rpc_conn.getaccountaddress(uuid)
             ledger_id = self.ledger.createLedgerRecord(uuid,bitcoin_addr,emailAddr=emailAddr)
-            new_ledger_record = self.ledger.getLedgerRecord(ledgerId=ledger_id)
+            new_ledger_record = self.ledger.getLedgerRecord(uuid=uuid)
 
             new_ledger_record['bitcoinPrice'] = str(bitcoin_price)
             new_ledger_record['currentPrice'] = current_price
