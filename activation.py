@@ -17,10 +17,10 @@ LOG_CHANNEL = "activation"
 LOG_FILE = "activation_errors.log"
 LOG_FILE_LEVEL = logging.ERROR
 
-ACTIVATION_DB_HOST = "localhost"
-ACTIVATION_NAME = "activation"
-ACTIVATION_USER = "root"
-ACTIVATION_PASSWD = ""
+LEDGER_DB_HOST = "localhost"
+LEDGER_DB_USER = "root"
+LEDGER_DB_PASSWD = ""
+LEDGER_DB_NAME = "activation"
 
 class ActivationSignatureGenerator:
     def __init__(self,screenLogHandler=None):
@@ -48,3 +48,20 @@ class ActivationSignatureGenerator:
 
     def sign(self,uuid):
         try:
+            x = self.conn.cursor()
+            x.execute("SELECT activation_id FROM activation WHERE uuid='%s';" % uuid)
+            row = x.fetchone()
+            if row:
+                self.logger.error("Activation already exists for " + uuid)
+                return False
+            else:
+                # call external process to sign uuid
+                activation_signature = "sig"
+                sql = "INSERT INTO activation (uuid,signature) VALUES ('%s','%s')" % (uuid,activation_signature)
+                self.logger.debug("Executing SQL: " + sql)
+                x.execute(sql)
+                self.conn.commit()
+                return self.conn.insert_id()
+        except MySQLdb.Error as e:
+            self.logger.error("MySQLdb raised exception: %s",str(e))
+            return None

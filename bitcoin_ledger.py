@@ -79,13 +79,27 @@ class BitcoinLedger:
             return None
 
     def getLedgerRecord(self,ledgerId=None,uuid=None,bitcoinAddr=None):
-        sql = None
+        sql = """SELECT ledger_id,
+                        uuid,
+                        email,
+                        bitcoin_address,
+                        bitcoin_confirmations,
+                        bitcoin_balance,
+                        price_paid,
+                        refund_paid,
+                        refund_address,
+                        activation_signature,
+                        created,
+                        paid,
+                        refunded"""
         if ledgerId:
-            sql = "SELECT * FROM bitcoin_ledger WHERE ledger_id=%d;" % ledgerId
+            sql += " FROM bitcoin_ledger WHERE ledger_id=%d;" % ledgerId
         elif uuid:
-            sql = "SELECT * FROM bitcoin_ledger WHERE uuid='%s';" % uuid
+            sql += " FROM bitcoin_ledger WHERE uuid='%s';" % uuid
         elif bitcoinAddr:
-            sql = "SELECT * FROM bitcoin_ledger WHERE bitcoin_address='%s';" % bitcoinAddr
+            sql += " FROM bitcoin_ledger WHERE bitcoin_address='%s';" % bitcoinAddr
+        else:
+            sql = None
 
         if sql:
             try:
@@ -97,8 +111,8 @@ class BitcoinLedger:
                             "uuid":row[1],
                             "emailAddress":row[2],
                             "bitcoinAddress":row[3],
-                            "bitcoinBalance":row[4],
-                            "bitcoinConfirmations":row[5],
+                            "bitcoinConfirmations":row[4],
+                            "bitcoinBalance":row[5],
                             "pricePaid":row[6],
                             "refundPaid":row[7],
                             "refundAddress":row[8],
@@ -140,8 +154,8 @@ class BitcoinLedger:
                         "uuid":row[1],
                         "emailAddress":row[2],
                         "bitcoinAddress":row[3],
-                        "bitcoinBalance":row[4],
-                        "bitcoinConfirmations":row[5],
+                        "bitcoinConfirmations":row[4],
+                        "bitcoinBalance":row[5],
                         "pricePaid":row[6],
                         "refundPaid":row[7],
                         "refundAddress":row[8],
