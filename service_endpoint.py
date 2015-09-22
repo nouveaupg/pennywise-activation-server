@@ -11,7 +11,7 @@ API_KEY = "76E42FA28C83";
 def get_uint_param(pname,default,all_params):
     if pname in all_params:
         pvalue = int(all_params[pname])
-        if(pvalue < 0)
+        if pvalue < 0:
             pvalue = default
         return pvalue
     else:
