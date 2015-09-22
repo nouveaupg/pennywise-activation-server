@@ -56,7 +56,7 @@ def admin():
             else:
                 return json.dumps({"success":False,
                                     "msg":"Failed to return results for pull-latest-records.",
-                                    "tag":tag}})
+                                    "tag":tag})
         else:
             return json.dumps({"success":False,
                                 "msg":"Action not recognized.",
