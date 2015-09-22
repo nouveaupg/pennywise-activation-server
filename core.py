@@ -10,7 +10,7 @@ import bitcoin_ledger
 import activation
 
 PRICE_IN_DOLLARS = 30
-REFUND_CONFIRMS = 40
+REFUND_CONFIRMS = 6
 
 RPC_HOST = "aries"
 RPC_PORT = 8332

@@ -8,19 +8,59 @@ app = Flask(__name__)
 
 API_KEY = "76E42FA28C83";
 
+def get_uint_param(pname,default,all_params):
+    if pname in all_params:
+        pvalue = int(all_params[pname])
+        if(pvalue < 0)
+            pvalue = default
+        return pvalue
+    else:
+        return default
+
 @app.route("/admin")
 def admin():
     json_request = request.get_json()
 
     if json_request:
+        # authenticate before we do anything like connecting to a database
         if json_request['apiKey'] != API_KEY:
             return json.dumps({"success":False,"msg":"Unauthorized request."})
         if json_request['action'] == "get-statistics":
             ledger = BitcoinLedger()
             result = ledger.getStatistics()
-            result = json_request['tag']
-            result['success'] = True
-            return json.dumps(result)
+            if result:
+                result = json_request['tag']
+                result['success'] = True
+                return json.dumps(result)
+            else:
+                result = {
+                    "tag":json_request['tag'],
+                    "success":False,
+                    "msg":"Did not return result."}
+                return json.dumps(result)
+        elif json_request['action'] == 'pull-latest-records':
+            param = json_request['parameters']
+            #default
+            offset = get_uint_param("offset",0,param)
+            limit = get_uint_param("limit",10,param)
+
+            ledger = BitcoinLedger()
+            results = ledger.latestRecords(offset,limit)
+            if results:
+                output = {"success":True,
+                            "latestRecords":results,
+                            "limit":limit,
+                            "offset":offset,
+                            "tag":json_request['tag']}
+                return json.dumps(output)
+            else:
+                return json.dumps({"success":False,
+                                    "msg":"Failed to return results for pull-latest-records.",
+                                    "tag":tag}})
+        else:
+            return json.dumps({"success":False,
+                                "msg":"Action not recognized.",
+                                "tag":tag})
 
 
     return json.dumps({"success":False,"msg":"Invalid request."})
