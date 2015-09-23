@@ -4,26 +4,19 @@ from bitcoin_ledger import BitcoinLedger
 from bitcoin_pricing import BitcoinPricing
 import json
 import re
+import datetime
+from decimal import Decimal
 app = Flask(__name__)
 
 API_KEY = "76E42FA28C83";
 
 def make_object_json_safe(raw_object):
     result = dict(raw_object)
-    if 'datePaid' in result:
-        result['datePaid'] = result['datePaid'].isoformat()
-    if 'dateCreated' in result:
-        result['dateCreated'] = result['dateCreated'].isoformat()
-    if 'dateRefunded' in result:
-        result['dateRefunded'] = result['dateRefunded'].isoformat()
-    if 'bitcoinBalance' in result:
-        result['bitcoinBalance'] = str(result['bitcoinBalance'])
-    if 'pricePaid' in result:
-        result['pricePaid'] = str(result['pricePaid'])
-    if 'refundPaid' in result:
-        result['refundPaid'] = str(result['refundPaid'])
-    if 'currentPrice' in result:
-        result['currentPrice'] = str(result['currentPrice'])
+    for key,value in result:
+        if type(value) is datetime.datetime:
+            result[key] = value.isoformat()
+        elif type(value) is Decimal:
+            result[key] = str(value)
     return result
 
 
