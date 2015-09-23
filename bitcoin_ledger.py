@@ -185,6 +185,8 @@ class BitcoinLedger:
             else:
                 self.logger.error("BitcoinLedger.getStatistics SQL failed")
                 return None
+        except TypeError:
+            return {"total":0, "paid":0, "refunded":0}
         except MySQLdb.Error as e:
             self.logger.error("MySQLdb raised exception: %s",str(e))
             return None
