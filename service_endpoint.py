@@ -8,6 +8,25 @@ app = Flask(__name__)
 
 API_KEY = "76E42FA28C83";
 
+def make_object_json_safe(raw_object):
+    result = dict(raw_object)
+    if result['datePaid']:
+        result['datePaid'] = result['datePaid'].isoformat()
+    if result['dateCreated']:
+        result['dateCreated'] = result['dateCreated'].isoformat()
+    if result['dateRefunded']:
+        result['dateRefunded'] = result['dateRefunded'].isoformat()
+    if result['bitcoinBalance']:
+        result['bitcoinBalance'] = str(result['bitcoinBalance'])
+    if result['pricePaid']:
+        result['pricePaid'] = str(result['pricePaid'])
+    if result['refundPaid']:
+        result['refundPaid'] = str(result['refundPaid'])
+    if result['currentPrice']:
+        result['currentPrice'] = str(result['currentPrice'])
+    return result
+
+
 def get_uint_param(pname,default,all_params):
     if pname in all_params:
         pvalue = int(all_params[pname])
@@ -46,15 +65,19 @@ def admin():
                 param = json_request['parameters']
             else:
                 param = {}
-            #default
+            #defaults
             offset = get_uint_param("offset",0,param)
             limit = get_uint_param("limit",10,param)
-
+            # Connect to the Bitcoin ledger
             ledger = BitcoinLedger()
             results = ledger.latestRecords(offset,limit)
+            # Convert all fields to JSON safe
+            stripped_results = []
+            for each_result in results:
+                stripped_results.append(make_object_json_safe(each_result))
 
             output = {"success":True,
-                        "latestRecords":results,
+                        "latestRecords":stripped_results,
                         "limit":limit,
                         "offset":offset,
                         "tag":json_request['tag']}
@@ -65,7 +88,8 @@ def admin():
                                 "tag":json_request['tag']})
 
 
-    return json.dumps({"success":False,"msg":"Invalid request."})
+    return json.dumps({"success":False,
+                        "msg":"Invalid request."})
 
 @app.route('/activate',methods=['GET'])
 def activate():
@@ -78,39 +102,30 @@ def activate():
     uuid_regex = re.compile("[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}")
     email_regex = re.compile("\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b")
     if uuid_regex.match(uuid) == None:
-        result = {"success":False,"msg":"Invalid argument"}
-        return json.dumps(result)
+        output = {"success":False,
+                    "msg":"Invalid argument"}
+        return json.dumps(output)
 
     if email:
         if email_regex.match(email) == None:
-            result = {"success":False,"msg":"Invalid argument"}
-            return json.dumps(result)
+            output = {"success":False,
+                        "msg":"Invalid argument"}
+            return json.dumps(output)
 
     dispatch = Core()
     if dispatch:
         result = dispatch.updateForUuid(uuid,email)
         if result:
-            result['success'] = True
             # convert all the types to something that won't make json toss an
             # exception
-            if result['datePaid']:
-                result['datePaid'] = result['datePaid'].isoformat()
-            if result['dateCreated']:
-                result['dateCreated'] = result['dateCreated'].isoformat()
-            if result['dateRefunded']:
-                result['dateRefunded'] = result['dateRefunded'].isoformat()
-            if result['bitcoinBalance']:
-                result['bitcoinBalance'] = str(result['bitcoinBalance'])
-            if result['pricePaid']:
-                result['pricePaid'] = str(result['pricePaid'])
-            if result['refundPaid']:
-                result['refundPaid'] = str(result['refundPaid'])
-            if result['currentPrice']:
-                result['currentPrice'] = str(result['currentPrice'])
-            return json.dumps(result)
-
-    result = {"success":False,"msg":"Service down. Please try again later."}
-    return json.dumps(result)
+            result_obj = make_object_json_safe(result)
+            output = {
+                "success":True,
+                "result":result_obj }
+            return json.dumps(output)
+    output = {"success":False,
+                "msg":"Service down. Please try again later."}
+    return json.dumps(output)
 
 if __name__ == '__main__':
     app.run(debug=True)
