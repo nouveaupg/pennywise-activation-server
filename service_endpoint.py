@@ -52,17 +52,13 @@ def admin():
 
             ledger = BitcoinLedger()
             results = ledger.latestRecords(offset,limit)
-            if results:
-                output = {"success":True,
-                            "latestRecords":results,
-                            "limit":limit,
-                            "offset":offset,
-                            "tag":json_request['tag']}
-                return json.dumps(output)
-            else:
-                return json.dumps({"success":False,
-                                    "msg":"Failed to return results for pull-latest-records.",
-                                    "tag":json_request['tag']})
+
+            output = {"success":True,
+                        "latestRecords":results,
+                        "limit":limit,
+                        "offset":offset,
+                        "tag":json_request['tag']}
+            return json.dumps(output)
         else:
             return json.dumps({"success":False,
                                 "msg":"Action not recognized.",
