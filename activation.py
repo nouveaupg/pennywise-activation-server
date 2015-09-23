@@ -11,6 +11,7 @@
 
 import logging
 import datetime
+import subprocess
 import MySQLdb
 
 LOG_CHANNEL = "activation"
@@ -56,12 +57,19 @@ class ActivationSignatureGenerator:
                 return False
             else:
                 # call external process to sign uuid
-                activation_signature = "sig"
-                sql = "INSERT INTO activation (uuid,signature) VALUES ('%s','%s')" % (uuid,activation_signature)
-                self.logger.debug("Executing SQL: " + sql)
-                x.execute(sql)
-                self.conn.commit()
-                return self.conn.insert_id()
+                proc = subprocess.Popen(["/home/staging/SignUUID",uuid],stdout=subprocess.PIPE)
+                activation_signature =  proc.stdout.read().strip()
+                if activation_signature:
+                    sql = "INSERT INTO activation (uuid,signature) VALUES ('%s','%s')" % (uuid,activation_signature)
+                    self.logger.debug("Executing SQL: " + sql)
+                    self.conn.commit()
+                    return self.conn.insert_id()
+                else:
+                    self.logger.error("No signature returned by external processs")
+                    return None
         except MySQLdb.Error as e:
             self.logger.error("MySQLdb raised exception: %s",str(e))
+            return None
+        except e:
+            self.logger.error("Signing failed: " + str(e))
             return None
