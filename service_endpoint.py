@@ -17,7 +17,7 @@ def get_uint_param(pname,default,all_params):
     else:
         return default
 
-@app.route("/admin")
+@app.route("/admin",methods=['POST'])
 def admin():
     json_request = request.get_json()
 
