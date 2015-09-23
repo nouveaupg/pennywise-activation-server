@@ -58,9 +58,10 @@ class ActivationSignatureGenerator:
             else:
                 # call external process to sign uuid
                 proc = subprocess.Popen(["/home/staging/SignUUID",uuid],stdout=subprocess.PIPE)
-                activation_signature =  proc.stdout.read().strip()
+                activation_signature =  proc.stdout.read()
                 if activation_signature:
                     sql = "INSERT INTO activation (uuid,signature) VALUES ('%s','%s')" % (uuid,activation_signature)
+                    x.execute(sql)
                     self.logger.debug("Executing SQL: " + sql)
                     self.conn.commit()
                     return self.conn.insert_id()
