@@ -12,7 +12,8 @@ API_KEY = "76E42FA28C83";
 
 def make_object_json_safe(raw_object):
     result = dict(raw_object)
-    for key,value in result:
+    for key in result:
+        value = result[key]
         if type(value) is datetime.datetime:
             result[key] = value.isoformat()
         elif type(value) is Decimal:
