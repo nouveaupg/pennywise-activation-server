@@ -32,7 +32,7 @@ def admin():
             result = ledger.getStatistics()
             if result:
                 output = {'tag':json_request['tag'],
-                "success":True}
+                "success":True,
                 "results":result}
                 return json.dumps(output)
             else:
