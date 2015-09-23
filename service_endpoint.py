@@ -42,7 +42,10 @@ def admin():
                     "msg":"Did not return result."}
                 return json.dumps(result)
         elif json_request['action'] == 'pull-latest-records':
-            param = json_request['parameters']
+            if 'parameters' in json_request:
+                param = json_request['parameters']
+            else:
+                param = {}
             #default
             offset = get_uint_param("offset",0,param)
             limit = get_uint_param("limit",10,param)
