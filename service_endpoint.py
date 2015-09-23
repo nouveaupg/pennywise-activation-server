@@ -23,13 +23,15 @@ def admin():
 
     if json_request:
         # authenticate before we do anything like connecting to a database
+        if 'tag' not in json_request:
+            json_request['tag']
         if json_request['apiKey'] != API_KEY:
             return json.dumps({"success":False,"msg":"Unauthorized request."})
         if json_request['action'] == "get-statistics":
             ledger = BitcoinLedger()
             result = ledger.getStatistics()
             if result:
-                result = json_request['tag']
+                result['tag'] = json_request['tag']
                 result['success'] = True
                 return json.dumps(result)
             else:
