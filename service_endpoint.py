@@ -10,19 +10,19 @@ API_KEY = "76E42FA28C83";
 
 def make_object_json_safe(raw_object):
     result = dict(raw_object)
-    if result['datePaid']:
+    if 'datePaid' in result:
         result['datePaid'] = result['datePaid'].isoformat()
-    if result['dateCreated']:
+    if 'dateCreated' in result:
         result['dateCreated'] = result['dateCreated'].isoformat()
-    if result['dateRefunded']:
+    if 'dateRefunded' in result:
         result['dateRefunded'] = result['dateRefunded'].isoformat()
-    if result['bitcoinBalance']:
+    if 'bitcoinBalance' in result:
         result['bitcoinBalance'] = str(result['bitcoinBalance'])
-    if result['pricePaid']:
+    if 'pricePaid' in result:
         result['pricePaid'] = str(result['pricePaid'])
-    if result['refundPaid']:
+    if 'refundPaid' in result:
         result['refundPaid'] = str(result['refundPaid'])
-    if result['currentPrice']:
+    if 'currentPrice' in result:
         result['currentPrice'] = str(result['currentPrice'])
     return result
 
