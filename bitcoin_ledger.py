@@ -91,13 +91,16 @@ class BitcoinLedger:
                         activation_signature,
                         created,
                         paid,
-                        refunded"""
+                        refunded
+                FROM bitcoin_ledger
+                LEFT JOIN activation
+                ON bitcoin_ledger.activation_signature=activation.activation_id"""
         if ledgerId:
-            sql += " FROM bitcoin_ledger WHERE ledger_id=%d;" % ledgerId
+            sql += " WHERE ledger_id=%d;" % ledgerId
         elif uuid:
-            sql += " FROM bitcoin_ledger WHERE uuid='%s';" % uuid
+            sql += " WHERE uuid='%s';" % uuid
         elif bitcoinAddr:
-            sql += " FROM bitcoin_ledger WHERE bitcoin_address='%s';" % bitcoinAddr
+            sql += " WHERE bitcoin_address='%s';" % bitcoinAddr
         else:
             sql = None
 
