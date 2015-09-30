@@ -40,7 +40,7 @@ LOG_FILE_LEVEL = logging.ERROR
 class BitcoinPricing:
     def __init__(self,screenLogHandler=None):
         # set up logging
-        self.logger = logging.getLogger('activation')
+        self.logger = logging.getLogger(LOG_CHANNEL)
         self.logger.setLevel(logging.DEBUG)
         fh = logging.FileHandler(LOG_FILE)
         fh.setLevel(LOG_FILE_LEVEL)

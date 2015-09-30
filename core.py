@@ -10,7 +10,7 @@ import bitcoin_ledger
 import activation
 
 PRICE_IN_DOLLARS = 30
-REFUND_CONFIRMS = 6
+REFUND_CONFIRMS = 2
 
 RPC_HOST = "aries"
 RPC_PORT = 8332
@@ -19,12 +19,12 @@ RPC_PASSWD = "EsDt8nz5LhPdERzct5MwQJr7wT7iW2vPPjaNGvD3SFWm"
 
 LOG_CHANNEL = "core"
 LOG_FILE = "activation_errors.log"
-LOG_FILE_LEVEL = logging.ERROR
+LOG_FILE_LEVEL = logging.INFO
 
 class Core:
     def __init__(self,screenLogHandler=None):
         # set up logging
-        self.logger = logging.getLogger('activation')
+        self.logger = logging.getLogger(LOG_CHANNEL)
         self.logger.setLevel(logging.DEBUG)
         fh = logging.FileHandler(LOG_FILE)
         fh.setLevel(LOG_FILE_LEVEL)
@@ -117,7 +117,7 @@ class Core:
                 if ledger_record['refundAddress']:
                     refund_due = ledger_record['bitcoinBalance'] - ledger_record['pricePaid']
                     if refund_due > 0 and refund_due < Decimal(PRICE_IN_DOLLARS) * Decimal(.20):
-                        self.logger.debug("Remiting refund of %f to %s" % (refund_due,ledger_record['bitcoinAddress']))
+                        self.logger.info("Remiting refund of %f to %s" % (refund_due,ledger_record['bitcoinAddress']))
                         self.remit_refund(ledger_id,refund_due)
                         refunded_accounts += 1
 
