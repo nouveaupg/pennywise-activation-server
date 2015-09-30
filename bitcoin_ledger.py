@@ -88,7 +88,7 @@ class BitcoinLedger:
                         price_paid,
                         refund_paid,
                         refund_address,
-                        activation_signature,
+                        activation.signature,
                         bitcoin_ledger.created,
                         paid,
                         refunded
