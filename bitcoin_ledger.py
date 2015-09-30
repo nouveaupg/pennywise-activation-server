@@ -96,11 +96,11 @@ class BitcoinLedger:
                 LEFT JOIN activation
                 ON bitcoin_ledger.activation_signature=activation.activation_id"""
         if ledgerId:
-            sql += " WHERE ledger_id=%d;" % ledgerId
+            sql += " WHERE bitcoin_ledger.ledger_id=%d;" % ledgerId
         elif uuid:
-            sql += " WHERE uuid='%s';" % uuid
+            sql += " WHERE bitcoin_ledger.uuid='%s';" % uuid
         elif bitcoinAddr:
-            sql += " WHERE bitcoin_address='%s';" % bitcoinAddr
+            sql += " WHERE bitcoin_ledger.bitcoin_address='%s';" % bitcoinAddr
         else:
             sql = None
 
