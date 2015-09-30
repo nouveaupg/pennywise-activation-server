@@ -30,7 +30,7 @@ import logging
 import datetime
 import MySQLdb
 
-LOG_CHANNEL = "activation"
+LOG_CHANNEL = "bitcoin_ledger"
 LOG_FILE = "activation_errors.log"
 LOG_FILE_LEVEL = logging.ERROR
 

@@ -33,7 +33,7 @@ import datetime
 import MySQLdb
 from decimal import *
 
-LOG_CHANNEL = "activation"
+LOG_CHANNEL = "bitcoin_pricing"
 LOG_FILE = "activation_errors.log"
 LOG_FILE_LEVEL = logging.ERROR
 

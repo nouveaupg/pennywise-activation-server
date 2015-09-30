@@ -17,7 +17,7 @@ RPC_PORT = 8332
 RPC_USER = "bitcoinrpc"
 RPC_PASSWD = "EsDt8nz5LhPdERzct5MwQJr7wT7iW2vPPjaNGvD3SFWm"
 
-LOG_CHANNEL = "activation"
+LOG_CHANNEL = "core"
 LOG_FILE = "activation_errors.log"
 LOG_FILE_LEVEL = logging.ERROR
 
@@ -190,4 +190,7 @@ if __name__ == "__main__":
     ch.setFormatter(formatter)
 
     stub = Core(ch)
-    stub.processLedger()
+    try:
+        stub.processLedger()
+    except e:
+        print "Exception: " + str(e)
