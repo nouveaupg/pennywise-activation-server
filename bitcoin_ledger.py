@@ -80,7 +80,7 @@ class BitcoinLedger:
 
     def getLedgerRecord(self,ledgerId=None,uuid=None,bitcoinAddr=None):
         sql = """SELECT ledger_id,
-                        uuid,
+                        bitcoin_ledger.uuid,
                         email,
                         bitcoin_address,
                         bitcoin_confirmations,
