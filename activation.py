@@ -63,8 +63,9 @@ class ActivationSignatureGenerator:
                     sql = "INSERT INTO activation (uuid,signature) VALUES ('%s','%s')" % (uuid,activation_signature)
                     x.execute(sql)
                     self.logger.debug("Executing SQL: " + sql)
+                    last_row = x.lastrowid
                     self.conn.commit()
-                    return self.conn.insert_id()
+                    return last_row
                 else:
                     self.logger.error("No signature returned by external processs")
                     return None
