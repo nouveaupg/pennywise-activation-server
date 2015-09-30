@@ -58,6 +58,16 @@ class Core:
             self.logger.error("One or more modules failed to start. Check you configuration!")
             return None
 
+    def setRefundAddress(self,refundAddr,uuid):
+        ledger_record = self.ledger.getLedgerRecord(uuid=uuid)
+
+        if ledger_record:
+            valid_addr = self.rpc_conn.validateaddress(ledger_record['refundAddress'])
+            if valid_addr['isvalid']:
+                return self.ledger.setRefundAddress(ledger_record['id'],valid_addr['address'])
+        return False
+
+
     def processLedger(self):
         # retrieve all the unpaid accounts from the ledger and see if they match
         # newly posted transaction

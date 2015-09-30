@@ -85,6 +85,36 @@ def admin():
     return json.dumps({"success":False,
                         "msg":"Invalid request."})
 
+@app.route('/set-refund-address',methods=['POST'])
+def setRefundAddress():
+    json_request = request.get_json()
+
+    if json_request:
+        uuid = None
+        if 'uuid' in json_request:
+            uuid = str(json_request['uuid'])
+            uuid_regex = re.compile("[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}")
+            if uuid_regex.match(uuid) == None:
+                output = {"success":False,
+                            "msg":"Invalid argument"}
+                return json.dumps(output)
+        if 'refundAddress' in json_request and uuid:
+            refund_address = str(json_request['refundAddress'])
+            dispatch = Core()
+            result = dispatch.setRefundAddress(refund_address,uuid)
+            if result:
+                output = {"success":True,
+                            "refundAddress":refund_address}
+                return json.dumps(output)
+            else:
+                output = {"success":False,
+                            "msg":"Invalid UUID or refund address."}
+                return json.dumps(output)
+        output = {"success":False,
+                    "msg":"Invalid request."}
+        return json.dumps(output)
+
+
 @app.route('/activate',methods=['GET'])
 def activate():
     uuid = request.args.get('uuid')
