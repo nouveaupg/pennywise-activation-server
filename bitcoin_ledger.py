@@ -8,7 +8,7 @@
 #   uuid CHAR(36) NOT NULL,
 #   email VARCHAR(65),
 #   bitcoin_address VARCHAR(35) NOT NULL,
-#   bitcoin_confirmations TINYINT UNSIGNED DEFAULT 0,
+#   bitcoin_confirmations INT UNSIGNED DEFAULT 0,
 #   bitcoin_balance DOUBLE DEFAULT 0,
 #   price_paid DOUBLE DEFAULT NULL,
 #   refund_paid DOUBLE DEFAULT NULL,
