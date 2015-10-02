@@ -1,0 +1,76 @@
+I. Database setup
+=================================
+Install MySQL server 5.6 (+client & libraries)
+
+# yum install mysql56-server mysql56 mysql56-devel
+# chkconfig mysqld on
+
+Enable server as replication master (make sure server is able to receive external connections from slaves)
+
+Create new database
+
+Apply database build scripts
+mysql config/db_build.sql > db_name
+
+Create new user for new database
+
+GRANT SELECT,UPDATE,INSERT to new user
+
+Set root password to something secure
+
+—————————————————————
+II. Application setup (req: Python 2.7.10)
+==================================
+
+# sudo pip install virtualenv
+# yum install gcc
+
+$ cd /opt/
+$ git clone https://github.com/nouveaupg/activation-server.git
+$ cd activation-server
+
+Copy bitcoinrpc module into app directory 
+
+Create new virtual environment
+
+$ virtualenv venv
+
+Switch to virtual environment
+$ . venv/bin/activate
+
+Install python dependencies under virtual environment
+$ pip install mysql-python
+$ pip install flask
+$ pip install uwsgi
+
+Configure source files (set DB credentials, etc.)
+
+Execute unit tests to ensure correct configuration!!!
+$ python bitcoin_pricing.py
+$ python test_bitcoin_ledger.py
+$ python test_activation.py
+
+May test application at this point by running "python service_endpoint.py" in the virtual environment
+
+Install nginx
+# yum install nginx
+
+Configure nginx to run on instance start
+# chkconfig nginx on
+
+Edit nginx configuration file:
+
+location = /activation-service { rewrite ^ /activation-service/; }
+location /activation-service { try_files $uri @activation-service; }
+location @activation-service {
+  include uwsgi_params;
+  uwsgi_param SCRIPT_NAME /activation-service;
+  uwsgi_modifier1 30;
+  uwsgi_pass unix:/tmp/uwsgi.sock;
+}
+
+Install uwsgi globally
+# sudo pip install uwsgi
+
+Start UWSGI
+$ uwsgi -d -c config/uwsgi.ini
