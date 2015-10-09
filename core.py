@@ -22,11 +22,15 @@ LOG_FILE = "activation_errors.log"
 LOG_FILE_LEVEL = logging.INFO
 
 class Core:
-    def __init__(self,screenLogHandler=None):
+    def __init__(self,screenLogHandler=None,logFile=None):
         # set up logging
         self.logger = logging.getLogger(LOG_CHANNEL)
         self.logger.setLevel(logging.DEBUG)
-        fh = logging.FileHandler(LOG_FILE)
+        fh = None
+        if logFile == None:
+            fh = logging.FileHandler(LOG_FILE)
+        else:
+            fh = logging.FileHandler(logFile)
         fh.setLevel(LOG_FILE_LEVEL)
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         fh.setFormatter(formatter)
@@ -199,7 +203,7 @@ if __name__ == "__main__":
     formatter = logging.Formatter('%(asctime)s - %(message)s')
     ch.setFormatter(formatter)
 
-    stub = Core(ch)
+    stub = Core(ch,logFile="/tmp/activation_cron.log")
     try:
         stub.processLedger()
     except e:
