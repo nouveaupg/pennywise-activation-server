@@ -24,15 +24,20 @@ LEDGER_DB_PASSWD = ""
 LEDGER_DB_NAME = "activation"
 
 class ActivationSignatureGenerator:
-    def __init__(self,screenLogHandler=None):
+    def __init__(self,screenLogHandler=None,logFile=None):
         # set up logging
         self.logger = logging.getLogger(LOG_CHANNEL)
         self.logger.setLevel(logging.DEBUG)
-        fh = logging.FileHandler(LOG_FILE)
-        fh.setLevel(LOG_FILE_LEVEL)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        fh.setFormatter(formatter)
-        self.logger.addHandler(fh)
+        fh = None
+        if logFile == None:
+            fh = logging.FileHandler(LOG_FILE)
+        else:
+            fh = logging.FileHandler(logFile)
+        if fh:
+            fh.setLevel(LOG_FILE_LEVEL)
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            fh.setFormatter(formatter)
+            self.logger.addHandler(fh)
         if screenLogHandler:
             self.logger.addHandler(screenLogHandler)
         # try connecting to the database

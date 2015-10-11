@@ -54,9 +54,9 @@ class Core:
             return None
 
         # Initalize modules
-        self.pricing = bitcoin_pricing.BitcoinPricing()
-        self.ledger = bitcoin_ledger.BitcoinLedger()
-        self.activation = activation.ActivationSignatureGenerator()
+        self.pricing = bitcoin_pricing.BitcoinPricing(logFile=logFile)
+        self.ledger = bitcoin_ledger.BitcoinLedger(logFile=logFile)
+        self.activation = activation.ActivationSignatureGenerator(logFile=logFile)
 
         if self.pricing == None or self.ledger == None:
             self.logger.error("One or more modules failed to start. Check you configuration!")
