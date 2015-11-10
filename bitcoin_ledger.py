@@ -77,8 +77,9 @@ class BitcoinLedger:
         try:
             x = self.conn.cursor()
             x.execute(sql)
+            last_row_id = x.lastrowid
             self.conn.commit()
-            return self.conn.insert_id()
+            return last_row_id
         except MySQLdb.Error as e:
             self.logger.error("MySQLdb raised exception: %s",str(e))
             return None
