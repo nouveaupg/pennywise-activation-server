@@ -21,7 +21,7 @@
 
 # MySQL credentials
 LEDGER_DB_HOST = "localhost"
-LEDGER_DB_NAME = "activation"
+LEDGER_DB_NAME = "ledger_test"
 LEDGER_DB_USER = "root"
 LEDGER_DB_PASSWD = ""
 
@@ -32,7 +32,7 @@ import MySQLdb
 
 LOG_CHANNEL = "bitcoin_ledger"
 LOG_FILE = "activation_errors.log"
-LOG_FILE_LEVEL = logging.ERROR
+LOG_FILE_LEVEL = logging.DEBUG
 
 class BitcoinLedger:
     def __init__(self,screenLogHandler=None,logFile=None):
@@ -68,7 +68,7 @@ class BitcoinLedger:
             self.logger.error("Could not create bitcoin ledger record: missing uuid or bitcoin address")
             return None
         if emailAddr:
-            sql = """INSERT INTO bitcoin_ledger (uuid,email_address,bitcoin_address)
+            sql = """INSERT INTO bitcoin_ledger (uuid,email,bitcoin_address)
                                     VALUES ('%s','%s','%s')""" % (uuid,emailAddr,bitcoinAddr)
         else:
             sql = """INSERT INTO bitcoin_ledger (uuid,bitcoin_address)
