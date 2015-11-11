@@ -66,9 +66,13 @@ class Core:
         ledger_record = self.ledger.getLedgerRecord(uuid=uuid)
 
         if ledger_record:
-            valid_addr = self.rpc_conn.validateaddress(ledger_record['refundAddress'])
-            if valid_addr['isvalid']:
-                return self.ledger.setRefundAddress(ledger_record['id'],valid_addr['address'])
+            try:
+                valid_addr = self.rpc_conn.validateaddress(refundAddr)
+                if valid_addr['isvalid']:
+                    # under no circumstances should the ledger contain invalid refund addresses
+                    return self.ledger.setRefundAddress(ledger_record['id'],valid_addr['address'])
+            except JSONRPCException as e:
+                return False
         return False
 
 
