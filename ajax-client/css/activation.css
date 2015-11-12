@@ -13,3 +13,9 @@ input.valid {
 #activation_paid_container {
 	display: none;
 }
+#resp_refund_addr {
+	font-style: italic;
+}
+#resp_refund_addr_field {
+	display:none;
+}

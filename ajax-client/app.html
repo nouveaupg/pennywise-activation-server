@@ -1,22 +1,6 @@
 <HTML>
 <head>
-<style type="text/css">
-input.invalid {
-	background-color: #FEB8C3;
-}
-input.valid {
-	background-color: #BBEDC3;
-}
-#paid_refund_addr_field {
-	display: none;
-}
-#activation_response_container {
-	display: none;
-}
-#activation_paid_container {
-	display: none;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="css/activation.css">
 <script src="http://code.jquery.com/jquery-1.11.3.js"></script>
 <script src="js/activate.js"></script>
 <title>Activate</title>
@@ -48,7 +32,7 @@ input.valid {
 	</tr>
 	<tr>
 		<td><strong>Bitcoin Refund Address</strong></td>
-		<td><span id="resp_refund_addr"></span>&nbsp;<input type="button" value="Change" /></td>
+		<td><span id="resp_refund_addr_field"><input id="resp_refund_addr_field_input" name="resp_refund_addr_field" size="35" />&nbsp;<input id="resp_refund_addr_submit" type="button" value="Submit" /></span><span id="resp_refund_addr">Not selected.</span>&nbsp;<input id="resp_change_refund_addr" type="button" value="Set Refund Address" /></td>
 	</tr>
 	</tbody>
 	</table>
@@ -66,7 +50,7 @@ input.valid {
         </tr>
         <tr>
                 <td><strong>Bitcoin Refund Address</strong></td>
-                <td><span id="paid_refund_addr_field"><input id="paid_refund_addr_field_input" name="paid_refund_addr_field" size="30" />&nbsp;<input id="paid_refund_addr_submit" type="button" value="Submit" /></span><span id="paid_refund_addr"></span>&nbsp;<input id="paid_change_bitcoin_refund_addr" type="button" value="Change" /></td>
+                <td><span id="paid_refund_addr_field"><input id="paid_refund_addr_field_input" name="paid_refund_addr_field" size="35" />&nbsp;<input id="paid_refund_addr_submit" type="button" value="Submit" /></span><span id="paid_refund_addr"></span>&nbsp;<input id="paid_change_bitcoin_refund_addr" type="button" value="Change" /></td>
         </tr>
         <tr>
                 <td><strong>Activation Signature</strong></td>

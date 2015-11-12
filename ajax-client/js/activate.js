@@ -149,6 +149,11 @@ $( document ).ready(function() {
 		$("#paid_refund_addr_field").show();
 		$("#paid_change_bitcoin_refund_addr").hide();
 	});
+	$("#resp_change_refund_addr").click(function() {
+		$("#resp_refund_addr_field").show();
+		$("#resp_refund_addr").hide();
+		$("#resp_change_refund_addr").hide();
+	});
 	$("#paid_refund_addr_submit").click(function() {
 		$("#paid_refund_addr_field").hide();
 		$("#paid_change_bitcoin_refund_addr").show();
