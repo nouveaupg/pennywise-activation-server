@@ -221,7 +221,7 @@ class BitcoinLedger:
         sql = """SELECT bitcoin_address,
                         ledger_id
                         FROM bitcoin_ledger
-                        WHERE refund_paid IS NULL
+                        WHERE refund_paid IS NULL AND price_paid IS NOT NULL
                         ORDER BY ledger_id DESC;"""
 
         try:
