@@ -1,0 +1,92 @@
+<HTML>
+<head>
+<style type="text/css">
+input.invalid {
+	background-color: #FEB8C3;
+}
+input.valid {
+	background-color: #BBEDC3;
+}
+#paid_refund_addr_field {
+	display: none;
+}
+#activation_response_container {
+	display: none;
+}
+#activation_paid_container {
+	display: none;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.11.3.js"></script>
+<script src="js/activate.js"></script>
+<title>Activate</title>
+</head>
+<body>
+<h1>Activate</h2>
+<div id="activation_response_container">
+	<table>
+	<tbody>
+	<tr>
+		<td><strong>UUID</strong></td>
+		<td><span id="resp_uuid"></td>
+	</tr>
+	<tr>
+		<td><strong>Bitcoin Deposit Address</strong></td>
+		<td><span id="resp_deposit_addr"></td>
+	</tr>
+	<tr>
+		<td><strong>Deposit Balance</strong></td>
+		<td><span id="resp_balance">0.0</span> <span id="resp_confirmations">(0 confirmations)</span>
+	</tr>
+	<tr>
+		<td><strong>Current Price in BTC</strong></td>
+		<td><span id="resp_price">.15</span></td>
+	</tr>
+	<tr>
+		<td><strong>Current BTC/$USD Exchange Rate</strong></td>
+		<td><span id="resp_btc_price">230.00</span></td>
+	</tr>
+	<tr>
+		<td><strong>Bitcoin Refund Address</strong></td>
+		<td><span id="resp_refund_addr"></span>&nbsp;<input type="button" value="Change" /></td>
+	</tr>
+	</tbody>
+	</table>
+</div>
+<div id="activation_paid_container">
+        <table>
+        <tbody>
+        <tr>
+                <td><strong>UUID</strong>
+                <td><span id="paid_uuid"></span></td>
+        </tr>
+        <tr>
+                <td><strong>Refund Due</strong></td>
+                <td><span id="paid_refund_due"></span></td>
+        </tr>
+        <tr>
+                <td><strong>Bitcoin Refund Address</strong></td>
+                <td><span id="paid_refund_addr_field"><input id="paid_refund_addr_field_input" name="paid_refund_addr_field" size="30" />&nbsp;<input id="paid_refund_addr_submit" type="button" value="Submit" /></span><span id="paid_refund_addr"></span>&nbsp;<input id="paid_change_bitcoin_refund_addr" type="button" value="Change" /></td>
+        </tr>
+        <tr>
+                <td><strong>Activation Signature</strong></td>
+                <td><textarea id="paid_activation_sig" height="8" width="64"></textarea></td>
+        </tr>
+        </tbody>
+        </table>
+</div>
+<div id="activation_form_container">
+        <form action="#" method="GET">
+        <div id="uuid_field_container">
+                <input class="uuid_field" name="uuid_seg1" size="10">&nbsp;-&nbsp;<input class="uuid_field" name="uuid_seg2" size="5">&nbsp;-&nbsp;<input class="uuid_field" name="uuid_seg3" size="5">&nbsp;-&nbsp;<input class="uuid_field" name="uuid_seg4" size="5">&nbsp;-&nbsp;<input class="uuid_field" name="uuid_seg5" size="15" />
+        </div>
+        <div id="email_field_container">
+                <input name="email_field">&nbsp;<em>Optional</em>
+        </div>
+        <div id="submit_button_container">
+                <input id="submit_button" type="button" value="Continue" />&nbsp;<input id="reset_button" type="reset" value="Reset" />
+        </div>
+        </form>
+</div>
+</body>
+</html>

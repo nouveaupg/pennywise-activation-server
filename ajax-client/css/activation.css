@@ -1,0 +1,15 @@
+input.invalid {
+	background-color: #FEB8C3;
+}
+input.valid {
+	background-color: #BBEDC3;
+}
+#paid_refund_addr_field {
+	display: none;
+}
+#activation_response_container {
+	display: none;
+}
+#activation_paid_container {
+	display: none;
+}
