@@ -71,7 +71,10 @@ class Core:
                 if valid_addr['isvalid']:
                     # under no circumstances should the ledger contain invalid refund addresses
                     return self.ledger.setRefundAddress(ledger_record['id'],valid_addr['address'])
+                else:
+                    self.logger.error("Can't set refund address for %s to invalid Bitcoin address: %s", (uuid,refundAddr))
             except JSONRPCException as e:
+                self.logger.error("Bitcoin RPC exception: " + str(e))
                 return False
         return False
 
