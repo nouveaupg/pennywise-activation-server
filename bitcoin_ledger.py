@@ -329,19 +329,6 @@ if __name__ == "__main__":
     ch.setFormatter(formatter)
 
     ledger = BitcoinLedger(ch)
-    print ledger.latestRecords(0,10)
-
-    #unpaid_accounts = ledger.retrieveUnpaid()
-    #for each in unpaid_accounts.keys():
-    #    ledger_record = ledger.getLedgerRecord(unpaid_accounts[each])
-
-    #print ledger_record['uuid']
-    #    print "Balance: " + str(ledger_record['bitcoinBalance'])
-
-    #ledger.createLedgerRecord('3EBDA70E-9399-4418-B0CB-9F06A44B1A26',
-    #                            '17NdbrSGoUotzeGCcMMCqnFkEvLymoou9j')
-    #record = ledger.getLedgerRecord(uuid='3EBDA70E-9399-4418-B0CB-9F06A44B1A26')
-
-    #if ledger.markPaid(record['id'],.08888888889):
-    #    print ledger.getLedgerRecord(ledgerId=record['id'])
-    #    print ledger.getLedgerRecord(bitcoinAddr=record['bitcoinAddress'])
+    if ledger:
+        totals = ledger.getStatistics()
+        print "Connected to Bitcoin ledger (%d total records, %d paid, %d refunded)" % (totals["total"],totals["paid"],totals["refunded"])
