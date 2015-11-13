@@ -175,7 +175,8 @@ $( document ).ready(function() {
 		$("#resp_change_refund_addr").show();
 
 		var params = {"uuid":sessionStorage.getItem('uuid'),
-		"refundAddress":$("#paid_refund_addr_field_input").val()};
+		"refundAddress":$("#resp_refund_addr_field_input").val()};
+		
 		$.ajax("activation-service/set-refund-address",{
 			method:"POST",
 			contentType:"application/json",
@@ -189,6 +190,7 @@ $( document ).ready(function() {
 
 		var params = {"uuid":sessionStorage.getItem('uuid'),
 		"refundAddress":$("#paid_refund_addr_field_input").val()};
+
 		$.ajax("activation-service/set-refund-address",{
 			method:"POST",
 			contentType:"application/json",
