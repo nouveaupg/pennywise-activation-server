@@ -80,6 +80,21 @@ function reset_fields() {
 	}
 }
 
+function unpaid_set_refund_addr(resp) {
+	jsonData = resp.responseJSON
+	if(jsonData.success) {
+		$("#resp_refund_addr").text(jsonData.refundAddress)
+	}
+	else {
+		if(jsonData.msg) {
+			alert(jsonData.msg);
+		}
+		else {
+			alert("Undefined error occured while attempting to change refund address");
+		}
+	}
+}
+
 function set_refund_addr_response(resp) {
 	jsonData = resp.responseJSON
 	if(jsonData.success) {
@@ -153,6 +168,20 @@ $( document ).ready(function() {
 		$("#resp_refund_addr_field").show();
 		$("#resp_refund_addr").hide();
 		$("#resp_change_refund_addr").hide();
+	});
+	$("#resp_refund_addr_submit").click(function() {
+		$("#resp_refund_addr_field").hide();
+		$("#resp_refund_addr").show();
+		$("#resp_change_refund_addr").show();
+
+		var params = {"uuid":sessionStorage.getItem('uuid'),
+		"refundAddress":$("#paid_refund_addr_field_input").val()};
+		$.ajax("activation-service/set-refund-address",{
+			method:"POST",
+			contentType:"application/json",
+			dataType:"json",
+			data:JSON.stringify(params),
+			complete:unpaid_set_refund_addr});
 	});
 	$("#paid_refund_addr_submit").click(function() {
 		$("#paid_refund_addr_field").hide();
