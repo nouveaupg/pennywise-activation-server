@@ -2,7 +2,7 @@
 #
 # Keeps track of paid and pending bitcoin payments
 #
-# Depends on the following table
+# Depends on the following tables
 #
 # CREATE TABLE bitcoin_ledger (ledger_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 #   uuid CHAR(36) NOT NULL,
@@ -11,13 +11,21 @@
 #   bitcoin_confirmations INT UNSIGNED DEFAULT 0,
 #   bitcoin_balance DOUBLE DEFAULT 0,
 #   price_paid DOUBLE DEFAULT NULL,
-#   refund_paid DOUBLE DEFAULT NULL,
+#   refund_paid UNSIGNED INT DEFAULT NULL,
 #   refund_address VARCHAR(35),
 #   activation_signature INT unsigned,
 #   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 #   paid TIMESTAMP,
 #   refunded TIMESTAMP,
 #   UNIQUE(uuid));
+#
+# CREATE TABLE refunds (refund_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+#   refund_btc_address VARCHAR(35) NOT NULL,
+#   refund_tx_confirmations INT UNSIGNED DEFAULT 0,
+#   refund_value_int64 BIGINT UNSIGNED NOT NULL,
+#   refund_btc_tx_id VARCHAR(55) DEFAULT NULL,
+#   refund_type ENUM("automatic","manual"),
+#   refund_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 # MySQL credentials
 LEDGER_DB_HOST = "localhost"
