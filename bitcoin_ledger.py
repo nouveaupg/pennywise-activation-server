@@ -21,7 +21,6 @@
 #
 # CREATE TABLE refunds (refund_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 #   btc_address VARCHAR(35) NOT NULL,
-#   refund_tx_confirmations INT UNSIGNED DEFAULT 0,
 #   refund_value_int64 BIGINT UNSIGNED NOT NULL,
 #   refund_txid CHAR(64) DEFAULT NULL,
 #   refund_type ENUM("automatic","manual"),
@@ -276,7 +275,7 @@ class BitcoinLedger:
     def setBalance(self,ledgerId,balance,confirmations):
         try:
             x = self.conn.cursor()
-            sql = "UPDATE bitcoin_ledger SET bitcoin_balance=%F,bitcoin_confirmations=%d WHERE ledger_id=%d;" % (balance,confirmations,ledgerId)
+            sql = "UPDATE bitcoin_ledger SET bitcoin_balance=%d,bitcoin_confirmations=%d WHERE ledger_id=%d;" % (balance,confirmations,ledgerId)
             self.logger.debug("Executing SQL: " + sql)
             x.execute(sql)
             self.conn.commit()
@@ -307,7 +306,7 @@ class BitcoinLedger:
         #   return False
         try:
             x = self.conn.cursor()
-            sql = "UPDATE bitcoin_ledger SET price_paid=%f,paid=NOW() WHERE ledger_id=%d;" % (bitcoinPaid,ledgerId)
+            sql = "UPDATE bitcoin_ledger SET price_paid=%d,paid=NOW() WHERE ledger_id=%d;" % (bitcoinPaid,ledgerId)
             self.logger.debug("Executing SQL: " + sql)
             x.execute(sql)
             self.conn.commit()
@@ -317,10 +316,19 @@ class BitcoinLedger:
             return False
         return False
 
-    def markRefunded(self,ledgerId,bitcoinRefunded):
+    def markRefunded(self,ledgerId,bitcoinRefunded,txid,refund_type):
+        ledger_record = self.getLedgerRecord(ledgerId=ledgerId)
+        if ledger_record == None:
+            self.logger.error("Ledger record doesn't exists for ledgerId: %d",ledgerId)
+            return False
         try:
+            btc_address = ledger_record['refundAddress']
             x = self.conn.cursor()
-            sql = "UPDATE bitcoin_ledger SET refund_paid=%f,refunded=NOW() WHERE ledger_id=%d;" % (bitcoinRefunded,ledgerId)
+            sql = """INSERT INTO refunds (btc_address,refund_value_int64,refund_txid,refund_type)
+                            VALUES ('%s',%d,'%s','%s');""" % (btc_address,bitcoinRefunded,txid,refund_type)
+            self.logger.debug("Executing SQL: " + sql)
+            x.execute(sql)
+            sql = "UPDATE bitcoin_ledger SET refund_paid=%d,refunded=NOW() WHERE ledger_id=%d;" % (x.last_row_id,ledgerId)
             self.logger.debug("Executing SQL: " + sql)
             x.execute(sql)
             self.conn.commit()

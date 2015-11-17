@@ -28,7 +28,6 @@ UNIQUE(uuid));
 
 CREATE TABLE refunds (refund_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 btc_address VARCHAR(35) NOT NULL,
-refund_tx_confirmations INT UNSIGNED DEFAULT 0,
 refund_value_int64 BIGINT UNSIGNED NOT NULL,
 refund_txid CHAR(64) DEFAULT NULL,
 refund_type ENUM("automatic","manual"),
