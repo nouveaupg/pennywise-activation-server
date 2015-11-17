@@ -20,12 +20,12 @@
 #   UNIQUE(uuid));
 #
 # CREATE TABLE refunds (refund_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-#   refund_btc_address VARCHAR(35) NOT NULL,
+#   btc_address VARCHAR(35) NOT NULL,
 #   refund_tx_confirmations INT UNSIGNED DEFAULT 0,
 #   refund_value_int64 BIGINT UNSIGNED NOT NULL,
-#   refund_btc_tx_id VARCHAR(55) DEFAULT NULL,
+#   refund_txid CHAR(64) DEFAULT NULL,
 #   refund_type ENUM("automatic","manual"),
-#   refund_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+#   created TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 # MySQL credentials
 LEDGER_DB_HOST = "localhost"
