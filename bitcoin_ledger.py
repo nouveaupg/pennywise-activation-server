@@ -321,6 +321,9 @@ class BitcoinLedger:
         if ledger_record == None:
             self.logger.error("Ledger record doesn't exists for ledgerId: %d",ledgerId)
             return False
+        if ledger_record['refundAddress'] == None:
+            self.logger.error("Can't mark record refunded without refund address.")
+            return False
         try:
             btc_address = ledger_record['refundAddress']
             x = self.conn.cursor()
@@ -328,7 +331,7 @@ class BitcoinLedger:
                             VALUES ('%s',%d,'%s','%s');""" % (btc_address,bitcoinRefunded,txid,refund_type)
             self.logger.debug("Executing SQL: " + sql)
             x.execute(sql)
-            sql = "UPDATE bitcoin_ledger SET refund_paid=%d,refunded=NOW() WHERE ledger_id=%d;" % (x.last_row_id,ledgerId)
+            sql = "UPDATE bitcoin_ledger SET refund_paid=%d,refunded=NOW() WHERE ledger_id=%d;" % (x.lastrowid,ledgerId)
             self.logger.debug("Executing SQL: " + sql)
             x.execute(sql)
             self.conn.commit()
