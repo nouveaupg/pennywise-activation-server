@@ -10,7 +10,7 @@ Enable server as replication master (make sure server is able to receive externa
 Create new database
 
 Apply database build scripts
-mysql config/db_build.sql > db_name
+mysql -u root db_name < config/db_build.sql
 
 Create new user for new database
 
@@ -29,7 +29,7 @@ $ cd /opt/
 $ git clone https://github.com/nouveaupg/activation-server.git
 $ cd activation-server
 
-Copy bitcoinrpc module into app directory 
+Copy bitcoinrpc module into app directory
 
 Create new virtual environment
 
