@@ -99,7 +99,7 @@ class Core:
             # accounts, then update balances and confirmations
             for transaction in amt_received_by_address:
                 if transaction['address'] == each:
-                    account_balance = long(round(transaction['amount'] * 1e8))
+                    account_balance = long(round(float(transaction['amount']) * 1e8))
                     self.ledger.setBalance(ledger_id,
                                             account_balance,
                                             transaction['confirmations'])
@@ -115,7 +115,7 @@ class Core:
             # paid accounts, update confirmations, authorize refunds
             for transaction in amt_received_by_address:
                 if transaction['address'] == each:
-                    account_balance = long(round(transaction['amount'] * 1e8))
+                    account_balance = long(round(float(transaction['amount']) * 1e8))
                     self.logger.debug("Setting ledger balance: %s - %f" % (transaction['address'],account_balance))
                     self.ledger.setBalance(ledger_id,
                                             account_balance,
@@ -191,7 +191,7 @@ class Core:
                 recent_transactions = self.rpc_conn.listreceivedbyaddress()
                 for each in recent_transactions:
                     if each['account'] == ledger_record['bitcoinAddress']:
-                        account_balance = long(round(each['amount'] * 1e8))
+                        account_balance = long(round(float(each['amount']) * 1e8))
                         self.ledger.setBalance(ledger_id,account_balance,each['confirmations'])
                         break
 
