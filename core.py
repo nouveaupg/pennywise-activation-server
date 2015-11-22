@@ -222,5 +222,5 @@ if __name__ == "__main__":
     stub = Core(ch,logFile="/tmp/activation_cron.log")
     try:
         stub.processLedger()
-    except e:
+    except Exception as e:
         print "Exception: " + str(e)
