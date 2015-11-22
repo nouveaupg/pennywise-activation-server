@@ -145,7 +145,7 @@ class Core:
             return
         refund_due = ledger_record['bitcoinBalance'] - ledger_record['pricePaid']
         max_refund = long(currentPrice / 5)
-        if refund_due > 0 and refund < max_refund):
+        if refund_due > 0 and refund < max_refund:
             # validate refundAddress with bitcoin client
             try:
                 valid_addr = self.rpc_conn.validateaddress(ledger_record['refundAddress'])
