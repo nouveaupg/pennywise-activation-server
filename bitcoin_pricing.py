@@ -110,13 +110,13 @@ class BitcoinPricing:
             elapsed_seconds = int(time_delta.total_seconds())
             if elapsed_seconds < API_REQUEST_PERIOD:
                 self.logger.debug("Found price of " + str(row[1]) + " for " + currency + " from " + str(elapsed_seconds) + " seconds ago.")
-                return double(row[1])
+                return float(row[1])
             else:
                 self.fetch_bitcoin_pricing()
                 x.execute("SELECT * FROM bitcoin_pricing WHERE currency_symbol='%s' ORDER BY serial DESC LIMIT 1;" % currency)
                 row = x.fetchone()
                 self.logger.debug("Fetched price of " + str(row[1]) + " for " + currency + " from API server.")
-                return double(row[1])
+                return float(row[1])
 
         except MySQLdb.Error as e:
             self.logger.error("MySQLdb raised exception: %s",str(e))
