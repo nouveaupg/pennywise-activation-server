@@ -126,13 +126,14 @@ class Core:
             if ledger_record['bitcoinConfirmations'] >= REFUND_CONFIRMS:
                 if ledger_record['refundAddress']:
                     refund_due = ledger_record['bitcoinBalance'] - ledger_record['pricePaid']
+                    json_refund_value = float(refund_due / 1e8)
                     max_refund = long(currentPrice / 5)
                     if refund_due > 0 and max_refund:
-                        json_refund_value = float(refund_due / 1e8)
-                        self.logger.info("Remiting refund of %f to %s" % (json_refund_value,ledger_record['bitcoinAddress']))
+                        self.logger.info("Remitting refund of %f to %s" % (json_refund_value,ledger_record['refundAddress']))
                         self.remit_refund(ledger_id,json_refund_value)
                         refunded_accounts += 1
-
+                    else:
+                        self.logger.info("Refund due of %f to %s not remitted because it is too large for an automatic refund" % (json_refund_value,ledger_record['refundAddress'])))
 
         self.logger.info("Found " + str(paid_accounts) + " newly paid out of " + str(total_accounts) + " accounts.")
         self.logger.info("Auto-refunded %d out of %d pending refunds." % (refunded_accounts,
