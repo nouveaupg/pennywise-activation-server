@@ -133,7 +133,7 @@ class Core:
                         self.remit_refund(ledger_id,json_refund_value)
                         refunded_accounts += 1
                     else:
-                        self.logger.info("Refund due of %f to %s not remitted because it is too large for an automatic refund" % (json_refund_value,ledger_record['refundAddress'])))
+                        self.logger.info("Refund due of %f to %s not remitted because it is too large for an automatic refund" % (json_refund_value,ledger_record['refundAddress']))
 
         self.logger.info("Found " + str(paid_accounts) + " newly paid out of " + str(total_accounts) + " accounts.")
         self.logger.info("Auto-refunded %d out of %d pending refunds." % (refunded_accounts,
