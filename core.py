@@ -145,7 +145,9 @@ class Core:
             self.logger.error("Error remit_refund: could not locate ledger record for ledger ID " + ledger_id)
             return
         refund_due = ledger_record['bitcoinBalance'] - ledger_record['pricePaid']
-        max_refund = long(currentPrice / 5)
+        bitcoin_price = self.pricing.get24hourAvgForCurrency("USD")
+        current_price = long(round((PRICE_IN_DOLLARS/bitcoin_price)*1e8))
+        max_refund = long(current_price / 5)
         if refund_due > 0 and refund < max_refund:
             # validate refundAddress with bitcoin client
             try:
@@ -160,7 +162,7 @@ class Core:
             except JSONRPCException as e:
                 self.logger.error("Bitcoin RPC exception while remitting refund: " + str(e))
         else:
-            self.logger.info("Refund due of %f for %s too large for autorefund." % (refund_due,ledger_record['uuid']))
+            self.logger.info("Refund due of %f for %s too large for autorefund." % (json_refund_value,ledger_record['uuid']))
 
     def activate_uuid(self,ledger_id,pricePaid):
         current_price = pricePaid
