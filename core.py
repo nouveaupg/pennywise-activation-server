@@ -116,7 +116,7 @@ class Core:
             for transaction in amt_received_by_address:
                 if transaction['address'] == each:
                     account_balance = long(round(float(transaction['amount']) * 1e8))
-                    self.logger.debug("Setting ledger balance: %s - %f" % (transaction['address'],account_balance))
+                    self.logger.debug("Setting ledger balance: %s - %f" % (transaction['address'],float(account_balance/1e8)))
                     self.ledger.setBalance(ledger_id,
                                             account_balance,
                                             transaction['confirmations'])
@@ -127,7 +127,7 @@ class Core:
                 if ledger_record['refundAddress']:
                     refund_due = ledger_record['bitcoinBalance'] - ledger_record['pricePaid']
                     json_refund_value = float(refund_due / 1e8)
-                    max_refund = long(currentPrice / 5)
+                    max_refund = long(current_price / 5)
                     if refund_due > 0 and max_refund:
                         self.logger.info("Remitting refund of %f to %s" % (json_refund_value,ledger_record['refundAddress']))
                         self.remit_refund(ledger_id,json_refund_value)
