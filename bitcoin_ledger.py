@@ -99,15 +99,18 @@ class BitcoinLedger:
                         bitcoin_confirmations,
                         bitcoin_balance,
                         price_paid,
-                        refund_paid,
-                        refund_address,
+                        bitcoin_ledger.refund_address,
                         activation.signature,
                         bitcoin_ledger.created,
                         paid,
-                        refunded
+                        refunded,
+                        refunds.refund_txid,
+                        refunds.refund_value_int64
                 FROM bitcoin_ledger
                 LEFT JOIN activation
-                ON bitcoin_ledger.activation_signature=activation.activation_id"""
+                ON bitcoin_ledger.activation_signature=activation.activation_id
+                LEFT JOIN refunds
+                ON bitcoin_ledger.refund_paid=refunds.refund_id"""
         if ledgerId:
             sql += " WHERE bitcoin_ledger.ledger_id=%d;" % ledgerId
         elif uuid:
@@ -120,6 +123,7 @@ class BitcoinLedger:
         if sql:
             try:
                 x = self.conn.cursor()
+                self.logger.debug("Executing SQL: " + sql)
                 x.execute(sql)
                 row = x.fetchone()
                 if row:
@@ -130,12 +134,13 @@ class BitcoinLedger:
                             "bitcoinConfirmations":row[4],
                             "bitcoinBalance":row[5],
                             "pricePaid":row[6],
-                            "refundPaid":row[7],
-                            "refundAddress":row[8],
-                            "activationSignature":row[9],
-                            "dateCreated":row[10],
-                            "datePaid":row[11],
-                            "dateRefunded":row[12]}
+                            "refundAddress":row[7],
+                            "activationSignature":row[8],
+                            "dateCreated":row[9],
+                            "datePaid":row[10],
+                            "dateRefunded":row[11],
+                            "refundTxid":row[12],
+                            "refundPaid":row[13]}
                 else:
                     return None
             except MySQLdb.Error as e:
