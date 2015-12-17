@@ -101,5 +101,6 @@ class BitcoinLedgerUnitTests(unittest.TestCase):
         self.assertFalse(ledger.markRefunded(new_record,25000,'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855','automatic'))
         ledger.setRefundAddress(new_record,'1JrTrzBJ8LnJVk9Mkt5WccGRMrN2ysRnSQ')
         self.assertTrue(ledger.markRefunded(new_record,25000,'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855','automatic'))
+
 if __name__ == '__main__':
     unittest.main()

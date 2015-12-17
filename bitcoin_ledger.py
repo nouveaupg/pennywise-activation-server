@@ -248,13 +248,51 @@ class BitcoinLedger:
             self.logger.error("MySQLdb raised exception: %s",str(e))
             return None
 
-    def setActivationSignatureId(self,ledgerId,activationId):
+    def createWithdrawal(self,btc_address,btc_value):
+        sql = "INSERT INTO withdrawals (btc_address,btc_value_int64) VALUES ('%s',%d);" % (btc_address,btc_value)
         try:
             x = self.conn.cursor()
-            if activationId:
-                sql = "UPDATE bitcoin_ledger SET activation_signature=%d WHERE ledger_id=%d;" % (activationId,ledgerId)
+            x.execute(sql)
+            last_row_id = x.lastrowid
+            self.conn.commit()
+            return last_row_id
+        except MySQLdb.Error as e:
+            self.logger.error("MySQLdb raised exception: %s",str(e))
+            return None
+
+    def markWithdrawalComplete(self,withdrawalId,txid):
+        sql = "UPDATE withdrawals SET txid='%s', processed=NOW() WHERE withdrawal_id=%d" % (txid,withdrawalId)
+        try:
+            x = self.conn.cursor()
+            self.logger.debug("Executing SQL: " + sql)
+            x.execute(sql)
+            self.conn.commit()
+            return True
+        except MySQLdb.Error as e:
+            self.logger.error("MySQLdb raised exception: %s",str(e))
+            return False
+        return False
+
+    def addAddressesToDepositQueue(self,addresses):
+            x = self.conn.cursor()
+            for each in addresses:
+                sql = "INSERT INTO deposit_address_queue (btc_address) VALUES ('%s');" % each
+                self.logger.debug("Executing SQL: " + sql)
+                x.execute(sql)
+            self.conn.commit()
+            return True
+        except MySQLdb.Error as e:
+            self.logger.error("MySQLdb raised exception: %s",str(e))
+            return False
+        return False
+
+    def setOrderId(self,ledgerId,orderId):
+        try:
+            x = self.conn.cursor()
+            if orderId:
+                sql = "UPDATE bitcoin_ledger SET order_id=%d WHERE ledger_id=%d;" % (orderId,ledgerId)
             else:
-                sql = "UPDATE bitcoin_ledger SET activation_signature=NULL WHERE ledger_id=%d;" % (ledgerId)
+                sql = "UPDATE bitcoin_ledger SET order_id=NULL WHERE ledger_id=%d;" % (ledgerId)
             self.logger.debug("Executing SQL: " + sql)
             x.execute(sql)
             self.conn.commit()
